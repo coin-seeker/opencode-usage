@@ -77,8 +77,11 @@ export interface UsageState {
 }
 
 // Plugin configuration options (from tui.json)
+export type DisplayMode = "text" | "bar"
+
 export interface PluginOptions {
   refreshInterval?: number
+  displayMode?: DisplayMode
   headerColor?: string
   valueColor?: string
   dimColor?: string

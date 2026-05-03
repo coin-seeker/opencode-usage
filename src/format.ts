@@ -168,6 +168,29 @@ export function formatCost(
 }
 
 /**
+ * Build a progress bar string of the given width.
+ * Returns { filled, empty } strings for separate coloring in the TUI.
+ */
+const BAR_WIDTH = 14
+const FILLED_CHAR = "█"
+const EMPTY_CHAR = "░"
+
+export function formatBar(
+  utilization: number | null | undefined,
+  width: number = BAR_WIDTH,
+): { filled: string; empty: string } {
+  if (utilization === null || utilization === undefined) {
+    return { filled: "", empty: EMPTY_CHAR.repeat(width) }
+  }
+  const clamped = Math.max(0, Math.min(100, utilization))
+  const filledCount = Math.round((clamped / 100) * width)
+  return {
+    filled: FILLED_CHAR.repeat(filledCount),
+    empty: EMPTY_CHAR.repeat(width - filledCount),
+  }
+}
+
+/**
  * Map an OAuthUsageResponse field key to a short display label.
  */
 export function windowLabel(key: string): string {
