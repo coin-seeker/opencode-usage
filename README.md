@@ -22,7 +22,7 @@ An [opencode](https://opencode.ai) TUI sidebar plugin that displays your Claude 
 
 ## Install
 
-Paste this into your LLM agent (Claude Code, opencode, Cursor, etc.):
+Paste below into your OpenCode.
 
 ```
 Install and configure opencode-claude-usage by following the instructions here:
