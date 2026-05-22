@@ -178,4 +178,6 @@ Edit, restart opencode, see changes live.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
+
+This project is a fork of [stevejkang/opencode-claude-usage](https://github.com/stevejkang/opencode-claude-usage) (MIT). The original copyright is preserved alongside this fork's modifications (Codex support, refactor).
