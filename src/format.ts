@@ -117,23 +117,30 @@ function buildDateToday(
 }
 
 /**
- * Format a reset time string or ISO 8601 timestamp as relative time.
- * Handles both ISO 8601 ("2026-05-01T00:00:00Z") and CLI reset strings ("Resets5pm(Asia/Seoul)").
+ * Format a reset time string, ISO 8601 timestamp, or Unix timestamp as relative time.
+ * - String: ISO 8601 ("2026-05-01T00:00:00Z") or CLI reset strings ("Resets5pm(Asia/Seoul)").
+ * - Number: Unix timestamp. Heuristic — values >= 1e12 treated as milliseconds, else seconds.
+ *   (Codex /wham/usage returns reset_at in seconds; OAuth expiresAt is milliseconds.)
  */
-export function formatRelativeTime(isoString: string | null | undefined): string {
-  if (!isoString) return "—"
+export function formatRelativeTime(input: string | number | null | undefined): string {
+  if (input === null || input === undefined) return "—"
 
-  const parsed = parseResetString(isoString)
+  if (typeof input === "number") {
+    if (!Number.isFinite(input)) return "—"
+    const ms = input >= 1e12 ? input : input * 1000
+    return formatRelativeMs(ms - Date.now())
+  }
+
+  if (input === "") return "—"
+
+  const parsed = parseResetString(input)
   if (parsed !== null) {
     return formatRelativeMs(parsed - Date.now())
   }
 
-  const now = Date.now()
-  const target = new Date(isoString).getTime()
-
-  if (Number.isNaN(target)) return isoString
-
-  return formatRelativeMs(target - now)
+  const target = new Date(input).getTime()
+  if (Number.isNaN(target)) return input
+  return formatRelativeMs(target - Date.now())
 }
 
 /**
@@ -190,9 +197,6 @@ export function formatBar(
   }
 }
 
-/**
- * Map an OAuthUsageResponse field key to a short display label.
- */
 export function windowLabel(key: string): string {
   const labels: Record<string, string> = {
     fiveHour: "Session",
@@ -202,6 +206,8 @@ export function windowLabel(key: string): string {
     sevenDayDesign: "Design",
     sevenDayRoutines: "Routines",
     sevenDayOAuthApps: "Apps",
+    primaryWindow: "Session",
+    secondaryWindow: "Weekly",
   }
   return labels[key] ?? key
 }

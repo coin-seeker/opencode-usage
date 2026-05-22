@@ -25,6 +25,26 @@ describe("formatRelativeTime", () => {
     const future = new Date(Date.now() + (4 * 24 + 20) * 60 * 60 * 1000).toISOString()
     expect(formatRelativeTime(future)).toBe("4d 20h")
   })
+
+  it("accepts unix seconds (Codex resetAt) and formats relative", () => {
+    const futureSeconds = Math.floor(Date.now() / 1000) + 2 * 60 * 60 + 30 * 60
+    expect(formatRelativeTime(futureSeconds)).toMatch(/^2h (29|30)m$/)
+  })
+
+  it("accepts unix milliseconds when value >= 1e12", () => {
+    const futureMs = Date.now() + (2 * 60 * 60 + 30 * 60) * 1000
+    expect(formatRelativeTime(futureMs)).toMatch(/^2h (29|30)m$/)
+  })
+
+  it("treats past unix seconds as now", () => {
+    const pastSeconds = Math.floor(Date.now() / 1000) - 60
+    expect(formatRelativeTime(pastSeconds)).toBe("now")
+  })
+
+  it("returns — for non-finite number", () => {
+    expect(formatRelativeTime(Number.NaN)).toBe("—")
+    expect(formatRelativeTime(Number.POSITIVE_INFINITY)).toBe("—")
+  })
 })
 
 describe("formatPercentage", () => {
@@ -74,5 +94,17 @@ describe("windowLabel", () => {
 
   it("maps sevenDayOpus → Opus", () => {
     expect(windowLabel("sevenDayOpus")).toBe("Opus")
+  })
+
+  it("maps primaryWindow → Session for Codex", () => {
+    expect(windowLabel("primaryWindow")).toBe("Session")
+  })
+
+  it("maps secondaryWindow → Weekly for Codex", () => {
+    expect(windowLabel("secondaryWindow")).toBe("Weekly")
+  })
+
+  it("returns the key unchanged when unknown", () => {
+    expect(windowLabel("unknown_key")).toBe("unknown_key")
   })
 })
