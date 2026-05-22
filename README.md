@@ -5,13 +5,11 @@ An [opencode](https://opencode.ai) TUI sidebar plugin that displays your **Claud
 **Text mode** (default):
 ```
 ▼ Claude Usage
- user@example.com
- via cli
  Session      31%  resets in 3h 16m
  Weekly       11%  resets in 4d 5h
+ Sonnet        2%  resets in 6d 21h
+
 ▼ Codex Usage
- user@example.com
- via oauth-codex-cli
  Session       1%  resets in 4h 51m
  Weekly       23%  resets in 5d 12h
 ```
@@ -19,13 +17,10 @@ An [opencode](https://opencode.ai) TUI sidebar plugin that displays your **Claud
 **Bar mode** (`"displayMode": "bar"`):
 ```
 ▼ Claude Usage
- user@example.com
- via cli
  Session  █████░░░░░░░░░  31% (3h 16m)
  Weekly   ██░░░░░░░░░░░░  11% (4d 5h)
+
 ▼ Codex Usage
- user@example.com
- via oauth-codex-cli
  Session  ░░░░░░░░░░░░░░   1% (4h 51m)
  Weekly   ███░░░░░░░░░░░  23% (5d 12h)
 ```

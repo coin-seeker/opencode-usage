@@ -153,7 +153,6 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
           }
 
           const data = s.data
-          const profile = s.profile
           const isOpen = claudeOpen()
 
           return (
@@ -166,14 +165,6 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
 
               {isOpen ? (
                 <box flexDirection="column">
-                  {profile?.email ? (
-                    <box height={1}><text fg={dim}>{` ${profile.email}`}</text></box>
-                  ) : null}
-
-                  {profile?.email ? (
-                    <box height={1}><text fg={dim}>{` via ${s.authMethod}`}</text></box>
-                  ) : null}
-
                   {data ? (
                     <box flexDirection="column">
                       {CLAUDE_WINDOW_KEYS.map((key) => {
@@ -261,7 +252,6 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
           }
 
           const data = s.data
-          const profile = s.profile
           const isOpen = codexOpen()
           const rateLimit = data?.rateLimit
 
@@ -275,14 +265,6 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
 
               {isOpen ? (
                 <box flexDirection="column">
-                  {profile?.email ? (
-                    <box height={1}><text fg={dim}>{` ${profile.email}`}</text></box>
-                  ) : null}
-
-                  {profile?.email ? (
-                    <box height={1}><text fg={dim}>{` via ${s.authMethod}`}</text></box>
-                  ) : null}
-
                   {rateLimit ? (
                     <box flexDirection="column">
                       {CODEX_WINDOW_KEYS.map((key) => {
@@ -333,7 +315,7 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
         }
 
         return (
-          <box flexDirection="column">
+          <box flexDirection="column" gap={1}>
             {showClaude ? renderClaude() : null}
             {showCodex ? renderCodex() : null}
           </box>
