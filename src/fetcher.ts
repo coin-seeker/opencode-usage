@@ -1,10 +1,8 @@
-import { readFileSync, writeFileSync, renameSync, mkdirSync } from "node:fs"
-import { homedir } from "node:os"
-import { join } from "node:path"
 import { readKeychainCredentials, readCredentialsFile, readOpenCodeAuth, refreshToken, isTokenExpired } from "./keychain"
 import { fetchOAuthUsage, fetchOAuthProfile } from "./oauth-client"
 import { extractSessionKey, fetchWebUsage } from "./cookie-reader"
 import { detectClaude, probeCLIUsage, probeStatus } from "./cli-probe"
+import { readNamespacedCache, writeNamespacedCache } from "./cache"
 import type { UsageState, OAuthUsageResponse, ProfileResponse, AuthMethod } from "./types"
 
 interface FetchResult {
@@ -13,35 +11,14 @@ interface FetchResult {
   authMethod: AuthMethod
 }
 
-const CACHE_DIR = join(process.env.XDG_CACHE_HOME ?? join(homedir(), ".cache"), "opencode-usage")
-const CACHE_FILE = join(CACHE_DIR, "last.json")
-const CACHE_MAX_AGE_MS = 10 * 60 * 1000
-
-interface CachedResult {
-  timestamp: number
-  result: FetchResult
-}
-
 function readCache(): FetchResult | null {
-  try {
-    const raw = readFileSync(CACHE_FILE, "utf8")
-    const cached = JSON.parse(raw) as CachedResult
-    if (Date.now() - cached.timestamp > CACHE_MAX_AGE_MS) return null
-    if (!cached.result?.usage) return null
-    return cached.result
-  } catch {
-    return null
-  }
+  const cached = readNamespacedCache<FetchResult>("claude")
+  if (!cached?.usage) return null
+  return cached
 }
 
 function writeCache(result: FetchResult): void {
-  try {
-    mkdirSync(CACHE_DIR, { recursive: true })
-    const cached: CachedResult = { timestamp: Date.now(), result }
-    const tmpFile = `${CACHE_FILE}.${process.pid}.tmp`
-    writeFileSync(tmpFile, JSON.stringify(cached), { encoding: "utf8", mode: 0o600 })
-    renameSync(tmpFile, CACHE_FILE)
-  } catch {}
+  writeNamespacedCache("claude", result)
 }
 
 /**
