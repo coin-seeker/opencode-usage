@@ -67,12 +67,74 @@ export interface CLIProbeResult {
 // Plugin state
 export type FetchStatus = "idle" | "loading" | "success" | "error" | "not-configured"
 export type AuthMethod = "oauth" | "cookie" | "cli" | "none"
+export type ClaudeAuthMethod = AuthMethod
 
 export interface UsageState {
   status: FetchStatus
   data: OAuthUsageResponse | null
   profile: ProfileResponse | null
   authMethod: AuthMethod
+  error: string | null
+}
+
+export interface CodexUsageWindow {
+  usedPercent: number | null
+  limitWindowSeconds: number | null
+  resetAfterSeconds: number | null
+  resetAt: number | null // Unix timestamp in seconds (raw API value, not ms)
+}
+
+export interface CodexRateLimit {
+  allowed: boolean | null
+  limitReached: boolean | null
+  primaryWindow: CodexUsageWindow | null
+  secondaryWindow: CodexUsageWindow | null
+}
+
+export interface CodexCredits {
+  hasCredits: boolean | null
+  unlimited: boolean | null
+  overageLimitReached: boolean | null
+  balance: string | null
+}
+
+export interface CodexUsageResponse {
+  userId: string | null
+  accountId: string | null
+  email: string | null
+  planType: string | null
+  rateLimit: CodexRateLimit | null
+  credits: CodexCredits | null
+  rateLimitReachedType: { type: string } | null
+}
+
+export interface CodexProfile {
+  email: string | null
+  planType: string | null
+}
+
+export interface CodexJwtPayload {
+  email: string | null
+  chatgptPlanType: string | null
+  chatgptAccountId: string | null
+  chatgptUserId: string | null
+  exp: number | null // Unix timestamp in seconds (JWT standard)
+}
+
+export interface CodexCredentials {
+  accessToken: string
+  refreshToken: string
+  accountId: string | null
+  expiresAt: number // Unix timestamp in milliseconds (normalised from JWT seconds)
+}
+
+export type CodexAuthMethod = "oauth-codex-cli" | "oauth-opencode" | "env" | "none"
+
+export interface CodexState {
+  status: FetchStatus
+  data: CodexUsageResponse | null
+  profile: CodexProfile | null
+  authMethod: CodexAuthMethod
   error: string | null
 }
 
@@ -85,4 +147,7 @@ export interface PluginOptions {
   headerColor?: string
   valueColor?: string
   dimColor?: string
+  showClaude?: boolean
+  showCodex?: boolean
+  codexHeaderColor?: string
 }
