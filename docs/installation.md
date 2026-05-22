@@ -4,13 +4,15 @@
 
 ## What is opencode-usage?
 
-An opencode TUI plugin that displays Claude account usage statistics in the sidebar. Shows session and weekly rate limits with reset countdowns.
+An opencode TUI plugin that displays **Claude** and **Codex (ChatGPT)** account usage statistics in the sidebar. Each provider gets its own collapsible section, showing session and weekly rate limits with reset countdowns.
 
 ## Prerequisites
 
 - [opencode](https://opencode.ai) installed and working
 - Plugin support (`@opencode-ai/plugin` >= 1.4.3)
-- Claude CLI logged in (`claude auth login`) — or `CLAUDE_CODE_OAUTH_TOKEN` env var set
+- At least one of the following auth sources (both are optional — each provider is shown independently):
+  - **Claude**: Claude CLI logged in (`claude auth login`) or `CLAUDE_CODE_OAUTH_TOKEN` env var
+  - **Codex**: Codex CLI logged in (`codex login`) or `CODEX_OAUTH_ACCESS_TOKEN` + `CODEX_ACCOUNT_ID` env vars
 
 ## Step 1: Configure the TUI plugin
 
@@ -47,17 +49,23 @@ All options are optional. Defaults shown:
 ["opencode-usage", {
   "enabled": true,
   "refreshInterval": 60,
-  "displayMode": "text"
+  "displayMode": "text",
+  "showClaude": true,
+  "showCodex": true,
+  "codexHeaderColor": "#10A37F"
 }]
 ```
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `refreshInterval` | `number` | `60` | Seconds between data refreshes |
+| `refreshInterval` | `number` | `60` | Seconds between data refreshes (applies to both providers) |
 | `displayMode` | `string` | `"text"` | `"text"` shows percentage + reset time, `"bar"` shows progress bar + percentage + reset time |
 | `headerColor` | `string` | theme text | Color of window labels (Session, Weekly, etc.) |
 | `valueColor` | `string` | `#82AAFF` | Color of percentage values |
 | `dimColor` | `string` | theme muted | Color of reset times and secondary text |
+| `showClaude` | `boolean` | `true` | Show the Claude section. Set to `false` to hide and stop polling. |
+| `showCodex` | `boolean` | `true` | Show the Codex section. Set to `false` to hide and stop polling. |
+| `codexHeaderColor` | `string` | `"#10A37F"` | Color of the Codex header and high-usage percentage |
 
 ## Step 2: Restart opencode
 
@@ -65,7 +73,7 @@ The plugin loads at startup. Restart opencode to activate.
 
 ## Verification
 
-After restart, the sidebar should show a "Claude Usage" section with usage rows:
+After restart, the sidebar should show both **Claude Usage** and **Codex Usage** sections with usage rows.
 
 **Text mode** (default):
 ```
@@ -74,6 +82,11 @@ After restart, the sidebar should show a "Claude Usage" section with usage rows:
  via cli
  Session      31%  resets in 3h 16m
  Weekly       11%  resets in 4d 5h
+▼ Codex Usage
+ user@example.com
+ via oauth-codex-cli
+ Session       1%  resets in 4h 51m
+ Weekly       23%  resets in 5d 12h
 ```
 
 **Bar mode** (`"displayMode": "bar"`):
@@ -83,16 +96,28 @@ After restart, the sidebar should show a "Claude Usage" section with usage rows:
  via cli
  Session  █████░░░░░░░░░  31% (3h 16m)
  Weekly   ██░░░░░░░░░░░░  11% (4d 5h)
+▼ Codex Usage
+ user@example.com
+ via oauth-codex-cli
+ Session  ░░░░░░░░░░░░░░   1% (4h 51m)
+ Weekly   ███░░░░░░░░░░░  23% (5d 12h)
 ```
 
-If no auth method is available, you will see:
+Click `▼` / `▶` on either header to collapse that section independently.
+
+If a provider has no auth method available, you will see:
 
 ```
 Claude Usage
 Set CLAUDE_CODE_OAUTH_TOKEN or run 'claude login'
+
+Codex Usage
+Run 'codex login' or set CODEX_OAUTH_ACCESS_TOKEN
 ```
 
-During initial load (first time only, ~20 seconds for CLI probe):
+The other section continues to work — failure of one provider does not affect the other.
+
+During initial load (first time only, ~20 seconds for Claude CLI probe path; Codex is typically sub-second):
 
 ```
 Claude Usage
@@ -101,7 +126,9 @@ Loading in 20s...
 
 ## Auth Methods
 
-The plugin tries multiple authentication methods in order:
+### Claude
+
+The plugin tries Claude auth methods in this order:
 
 | Priority | Method | Platforms | Setup |
 |----------|--------|-----------|-------|
@@ -114,14 +141,28 @@ The plugin tries multiple authentication methods in order:
 
 **Windows users**: Methods 1-3 work. Set `CLAUDE_CODE_OAUTH_TOKEN` for the most reliable experience.
 
+### Codex
+
+The plugin tries Codex auth methods in this order:
+
+| Priority | Method | Platforms | Setup |
+|----------|--------|-----------|-------|
+| 1 | `CODEX_OAUTH_ACCESS_TOKEN` + `CODEX_ACCOUNT_ID` env vars | All | Export both env vars (useful for CI/headless) |
+| 2 | `~/.codex/auth.json` (Codex CLI native) | All | Automatic after `codex login` |
+| 3 | OpenCode `auth.json` (`openai` provider key) | All | Automatic if logged in via opencode's OpenAI provider |
+
+Expired access tokens are refreshed automatically via `https://auth.openai.com/oauth/token` for both file-based methods. The HTTP API used is `GET https://chatgpt.com/backend-api/wham/usage` with `Authorization: Bearer <access_token>` and `ChatGPT-Account-Id: <account_id>`.
+
 ## Troubleshooting
 
 - **Plugin not showing**: Verify `tui.json` exists at `~/.config/opencode/tui.json` and contains the plugin entry. Restart opencode after editing.
-- **"Set CLAUDE_CODE_OAUTH_TOKEN or run 'claude login'" message**: No auth method succeeded. Run `claude auth login` or set the env var.
-- **Shows 0% usage**: The CLI probe may not have parsed the output correctly. Wait for a refresh cycle (60s).
+- **"Set CLAUDE_CODE_OAUTH_TOKEN or run 'claude login'" message**: No Claude auth method succeeded. Run `claude auth login` or set the env var. The Codex section is unaffected.
+- **"Run 'codex login' or set CODEX_OAUTH_ACCESS_TOKEN" message**: No Codex auth method succeeded. Run `codex login` to create `~/.codex/auth.json`. The Claude section is unaffected.
+- **Shows 0% usage** (Claude only): The CLI probe may not have parsed the output correctly. Wait for a refresh cycle (60s).
 - **Data not updating**: Default refresh is 60 seconds. Wait or lower `refreshInterval` in options.
-- **Slow initial load (~20s)**: First load uses CLI PTY probe which takes time. Subsequent launches use cached data for instant display.
-- **"Loading shortly..."**: The countdown reached zero but the probe is still running. It will appear when ready.
+- **Slow initial load (~20s)** (Claude only): First load may use the Claude CLI PTY probe which takes time. Subsequent launches use cached data for instant display.
+- **"Loading shortly..."**: The countdown reached zero but the fetch is still running. It will appear when ready.
+- **Codex shows "Token invalid or expired"**: Run `codex login` again. The `id_token` JWT in `~/.codex/auth.json` may have expired; the plugin will use the `refresh_token` automatically if present.
 
 ## Uninstall
 
