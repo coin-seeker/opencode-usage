@@ -1,8 +1,8 @@
-# opencode-claude-usage Installation Guide
+# opencode-usage Installation Guide
 
 > This guide is designed for LLM agents to follow step-by-step. Each step includes expected outcomes for verification.
 
-## What is opencode-claude-usage?
+## What is opencode-usage?
 
 An opencode TUI plugin that displays Claude account usage statistics in the sidebar. Shows session and weekly rate limits with reset countdowns.
 
@@ -16,13 +16,13 @@ An opencode TUI plugin that displays Claude account usage statistics in the side
 
 Edit `~/.config/opencode/tui.json`. Create the file if it doesn't exist.
 
-Add `["opencode-claude-usage", { "enabled": true }]` to the `plugin` array:
+Add `["opencode-usage", { "enabled": true }]` to the `plugin` array:
 
 ```json
 {
   "$schema": "https://opencode.ai/tui.json",
   "plugin": [
-    ["opencode-claude-usage", { "enabled": true }]
+    ["opencode-usage", { "enabled": true }]
   ]
 }
 ```
@@ -34,7 +34,7 @@ Add `["opencode-claude-usage", { "enabled": true }]` to the `plugin` array:
   "$schema": "https://opencode.ai/tui.json",
   "plugin": [
     ["existing-plugin", { "enabled": true }],
-    ["opencode-claude-usage", { "enabled": true }]
+    ["opencode-usage", { "enabled": true }]
   ]
 }
 ```
@@ -44,7 +44,7 @@ Add `["opencode-claude-usage", { "enabled": true }]` to the `plugin` array:
 All options are optional. Defaults shown:
 
 ```json
-["opencode-claude-usage", {
+["opencode-usage", {
   "enabled": true,
   "refreshInterval": 60,
   "displayMode": "text"
@@ -125,6 +125,6 @@ The plugin tries multiple authentication methods in order:
 
 ## Uninstall
 
-1. Remove `["opencode-claude-usage", { "enabled": true }]` from `~/.config/opencode/tui.json` plugin array
+1. Remove `["opencode-usage", { "enabled": true }]` from `~/.config/opencode/tui.json` plugin array
 2. Restart opencode
-3. Optionally delete cache: `rm -rf ~/.cache/opencode-claude-usage/`
+3. Optionally delete cache: `rm -rf ~/.cache/opencode-usage/`

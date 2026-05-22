@@ -13,7 +13,7 @@ interface FetchResult {
   authMethod: AuthMethod
 }
 
-const CACHE_DIR = join(process.env.XDG_CACHE_HOME ?? join(homedir(), ".cache"), "opencode-claude-usage")
+const CACHE_DIR = join(process.env.XDG_CACHE_HOME ?? join(homedir(), ".cache"), "opencode-usage")
 const CACHE_FILE = join(CACHE_DIR, "last.json")
 const CACHE_MAX_AGE_MS = 10 * 60 * 1000
 

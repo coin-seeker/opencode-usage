@@ -1,4 +1,4 @@
-# opencode-claude-usage
+# opencode-usage
 
 An [opencode](https://opencode.ai) TUI sidebar plugin that displays your Claude account usage. Shows session and weekly rate limits with reset countdowns.
 
@@ -25,8 +25,8 @@ An [opencode](https://opencode.ai) TUI sidebar plugin that displays your Claude 
 Paste below into your OpenCode.
 
 ```
-Install and configure opencode-claude-usage by following the instructions here:
-https://raw.githubusercontent.com/stevejkang/opencode-claude-usage/refs/heads/main/docs/installation.md
+Install and configure opencode-usage by following the instructions here:
+https://raw.githubusercontent.com/coin-seeker/opencode-usage/refs/heads/main/docs/installation.md
 ```
 
 ### Setup
@@ -38,7 +38,7 @@ One config file. Restart. Done.
 ```json
 {
   "$schema": "https://opencode.ai/tui.json",
-  "plugin": [["opencode-claude-usage", { "enabled": true }]]
+  "plugin": [["opencode-usage", { "enabled": true }]]
 }
 ```
 
@@ -48,7 +48,7 @@ opencode resolves the npm package on startup automatically.
 
 ```json
 {
-  "plugin": [["opencode-claude-usage", {
+  "plugin": [["opencode-usage", {
     "enabled": true,
     "refreshInterval": 60,
     "displayMode": "text",
@@ -80,7 +80,7 @@ Uses a 6-step fallback chain to fetch Claude usage data:
 6. Browser cookies (Chrome/Firefox)       → claude.ai Web API (macOS/Linux)
 ```
 
-Results are cached to disk (`~/.cache/opencode-claude-usage/last.json`) for instant startup. Background refresh keeps data current.
+Results are cached to disk (`~/.cache/opencode-usage/last.json`) for instant startup. Background refresh keeps data current.
 
 ### Cross-Platform Support
 
@@ -113,25 +113,25 @@ Windows users: set `CLAUDE_CODE_OAUTH_TOKEN` env var (run `claude setup-token` t
 Skip npm. Copy the source files directly:
 
 ```bash
-mkdir -p ~/.config/opencode/plugins/opencode-claude-usage
+mkdir -p ~/.config/opencode/plugins/opencode-usage
 cp src/tui.tsx src/types.ts src/format.ts src/keychain.ts \
    src/oauth-client.ts src/cookie-reader.ts src/cli-probe.ts src/fetcher.ts \
-   ~/.config/opencode/plugins/opencode-claude-usage/
+   ~/.config/opencode/plugins/opencode-usage/
 ```
 
 Register the local path:
 
 ```json
 {
-  "plugin": [["./plugins/opencode-claude-usage/tui.tsx", { "enabled": true }]]
+  "plugin": [["./plugins/opencode-usage/tui.tsx", { "enabled": true }]]
 }
 ```
 
 ## Development
 
 ```bash
-git clone https://github.com/stevejkang/opencode-claude-usage.git
-cd opencode-claude-usage
+git clone https://github.com/coin-seeker/opencode-usage.git
+cd opencode-usage
 npm install
 ```
 

@@ -192,7 +192,7 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
 }
 
 const plugin: TuiPluginModule & { id: string } = {
-  id: "opencode-claude-usage",
+  id: "opencode-usage",
   tui,
 }
 

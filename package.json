@@ -1,26 +1,30 @@
 {
-  "name": "opencode-claude-usage",
-  "version": "0.0.5",
-  "description": "OpenCode TUI sidebar plugin displaying Claude account usage statistics",
+  "name": "opencode-usage",
+  "version": "0.1.0",
+  "description": "OpenCode TUI sidebar plugin displaying Claude and Codex account usage statistics",
   "type": "module",
   "exports": {
     "./tui": "./src/tui.tsx"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stevejkang/opencode-claude-usage.git"
+    "url": "git+https://github.com/coin-seeker/opencode-usage.git"
   },
-  "author": "stevejkang",
+  "author": "coin-seeker",
   "license": "MIT",
   "files": [
     "src/tui.tsx",
     "src/types.ts",
     "src/format.ts",
+    "src/cache.ts",
     "src/keychain.ts",
     "src/oauth-client.ts",
     "src/cookie-reader.ts",
     "src/cli-probe.ts",
-    "src/fetcher.ts"
+    "src/fetcher.ts",
+    "src/codex-auth.ts",
+    "src/codex-oauth-client.ts",
+    "src/codex-fetcher.ts"
   ],
   "scripts": {
     "test": "vitest run",
