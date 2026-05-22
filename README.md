@@ -32,7 +32,7 @@ Click either header (`▼`/`▶`) to collapse that section independently.
 Paste below into your OpenCode.
 
 ```
-Install and configure opencode-usage by following the instructions here:
+Install and configure opencode-usage-sidebar by following the instructions here:
 https://raw.githubusercontent.com/coin-seeker/opencode-usage/refs/heads/main/docs/installation.md
 ```
 
@@ -45,7 +45,7 @@ One config file. Restart. Done.
 ```json
 {
   "$schema": "https://opencode.ai/tui.json",
-  "plugin": [["opencode-usage", { "enabled": true }]]
+  "plugin": [["opencode-usage-sidebar", { "enabled": true }]]
 }
 ```
 
@@ -55,7 +55,7 @@ opencode resolves the npm package on startup automatically.
 
 ```json
 {
-  "plugin": [["opencode-usage", {
+  "plugin": [["opencode-usage-sidebar", {
     "enabled": true,
     "refreshInterval": 60,
     "displayMode": "text",
@@ -145,18 +145,18 @@ Either provider can be missing — the section will simply show "Token invalid o
 Skip npm. Copy the source files directly:
 
 ```bash
-mkdir -p ~/.config/opencode/plugins/opencode-usage
+mkdir -p ~/.config/opencode/plugins/opencode-usage-sidebar
 cp src/tui.tsx src/types.ts src/format.ts src/cache.ts \
    src/keychain.ts src/oauth-client.ts src/cookie-reader.ts src/cli-probe.ts src/fetcher.ts \
    src/codex-auth.ts src/codex-oauth-client.ts src/codex-fetcher.ts \
-   ~/.config/opencode/plugins/opencode-usage/
+   ~/.config/opencode/plugins/opencode-usage-sidebar/
 ```
 
 Register the local path:
 
 ```json
 {
-  "plugin": [["./plugins/opencode-usage/tui.tsx", { "enabled": true }]]
+  "plugin": [["./plugins/opencode-usage-sidebar/tui.tsx", { "enabled": true }]]
 }
 ```
 

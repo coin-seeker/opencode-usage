@@ -1,8 +1,8 @@
-# opencode-usage Installation Guide
+# opencode-usage-sidebar Installation Guide
 
 > This guide is designed for LLM agents to follow step-by-step. Each step includes expected outcomes for verification.
 
-## What is opencode-usage?
+## What is opencode-usage-sidebar?
 
 An opencode TUI plugin that displays **Claude** and **Codex (ChatGPT)** account usage statistics in the sidebar. Each provider gets its own collapsible section, showing session and weekly rate limits with reset countdowns.
 
@@ -18,13 +18,13 @@ An opencode TUI plugin that displays **Claude** and **Codex (ChatGPT)** account 
 
 Edit `~/.config/opencode/tui.json`. Create the file if it doesn't exist.
 
-Add `["opencode-usage", { "enabled": true }]` to the `plugin` array:
+Add `["opencode-usage-sidebar", { "enabled": true }]` to the `plugin` array:
 
 ```json
 {
   "$schema": "https://opencode.ai/tui.json",
   "plugin": [
-    ["opencode-usage", { "enabled": true }]
+    ["opencode-usage-sidebar", { "enabled": true }]
   ]
 }
 ```
@@ -36,7 +36,7 @@ Add `["opencode-usage", { "enabled": true }]` to the `plugin` array:
   "$schema": "https://opencode.ai/tui.json",
   "plugin": [
     ["existing-plugin", { "enabled": true }],
-    ["opencode-usage", { "enabled": true }]
+    ["opencode-usage-sidebar", { "enabled": true }]
   ]
 }
 ```
@@ -46,7 +46,7 @@ Add `["opencode-usage", { "enabled": true }]` to the `plugin` array:
 All options are optional. Defaults shown:
 
 ```json
-["opencode-usage", {
+["opencode-usage-sidebar", {
   "enabled": true,
   "refreshInterval": 60,
   "displayMode": "text",
@@ -161,6 +161,6 @@ Expired access tokens are refreshed automatically via `https://auth.openai.com/o
 
 ## Uninstall
 
-1. Remove `["opencode-usage", { "enabled": true }]` from `~/.config/opencode/tui.json` plugin array
+1. Remove `["opencode-usage-sidebar", { "enabled": true }]` from `~/.config/opencode/tui.json` plugin array
 2. Restart opencode
 3. Optionally delete cache: `rm -rf ~/.cache/opencode-usage/`

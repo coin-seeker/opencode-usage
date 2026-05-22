@@ -326,7 +326,7 @@ const tui: TuiPlugin = async (api, rawOptions, _meta) => {
 }
 
 const plugin: TuiPluginModule & { id: string } = {
-  id: "opencode-usage",
+  id: "opencode-usage-sidebar",
   tui,
 }
 
